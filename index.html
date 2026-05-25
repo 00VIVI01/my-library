@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>My Library | Читалка</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #f6f9fc 0%, #e9f0f5 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', 'Roboto', 'Inter', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+            padding: 1.5rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(0px);
+            max-width: 620px;
+            width: 100%;
+            border-radius: 56px;
+            box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.25), 0 8px 18px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 32px 55px -14px rgba(0, 0, 0, 0.3);
+        }
+
+        .content {
+            padding: 2.8rem 2.5rem 3rem 2.5rem;
+            text-align: center;
+        }
+
+        .icon-area {
+            margin-bottom: 1.5rem;
+            display: inline-flex;
+            background: #2c3e4e1a;
+            padding: 1rem;
+            border-radius: 72px;
+        }
+
+        .book-icon {
+            font-size: 4rem;
+            filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.1));
+        }
+
+        h1 {
+            font-size: 2.3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #1F3B4C, #2C5F7A);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.3px;
+            margin-bottom: 0.8rem;
+        }
+
+        .sub {
+            font-size: 1.05rem;
+            color: #3a5c6e;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #dce9f0;
+            display: inline-block;
+            padding-bottom: 0.3rem;
+        }
+
+        .desc {
+            color: #2c4b5e;
+            background: #eef4f8;
+            padding: 0.9rem 1.2rem;
+            border-radius: 28px;
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: linear-gradient(105deg, #1f5e7e, #0e3e55);
+            border: none;
+            padding: 1rem 2.2rem;
+            border-radius: 60px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 12px 18px -8px rgba(0, 52, 73, 0.3);
+            width: auto;
+            min-width: 260px;
+            backdrop-filter: blur(2px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+        }
+
+        .download-btn:hover {
+            background: linear-gradient(105deg, #267a9e, #13506d);
+            transform: scale(1.02);
+            box-shadow: 0 18px 26px -10px rgba(0, 44, 65, 0.4);
+        }
+
+        .download-btn:active {
+            transform: scale(0.97);
+        }
+
+        .btn-icon {
+            font-size: 1.7rem;
+            filter: drop-shadow(0 2px 2px rgba(0,0,0,0.1));
+        }
+
+        .file-info {
+            margin-top: 2rem;
+            font-size: 0.75rem;
+            color: #5f7f8f;
+            background: #eef2f5;
+            display: inline-block;
+            padding: 0.4rem 1.2rem;
+            border-radius: 40px;
+            font-family: monospace;
+            letter-spacing: 0.3px;
+        }
+
+        .footnote {
+            margin-top: 2rem;
+            font-size: 0.7rem;
+            color: #7c97a5;
+            border-top: 1px solid #e2edf3;
+            padding-top: 1.5rem;
+        }
+
+        @media (max-width: 550px) {
+            .content {
+                padding: 1.8rem 1.5rem 2rem;
+            }
+            h1 {
+                font-size: 1.7rem;
+            }
+            .download-btn {
+                font-size: 1.1rem;
+                padding: 0.8rem 1.6rem;
+                min-width: 220px;
+            }
+            .btn-icon {
+                font-size: 1.4rem;
+            }
+        }
+
+        /* стили для состояния загрузки (опционально) */
+        .downloading {
+            pointer-events: none;
+            opacity: 0.7;
+        }
+        .downloading .download-btn {
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <div class="content">
+        <div class="icon-area">
+            <div class="book-icon">📚✨</div>
+        </div>
+        <h1>Скачать читалку<br>My Library!</h1>
+        <div class="sub">Ваша персональная цифровая библиотека</div>
+        <div class="desc">
+            🚀 Удобная читалка с разнообразным каталогам, офлайн режимом и быстрым поиском.<br>
+            Версия для Android.
+        </div>
+
+        <!-- КНОПКА СКАЧИВАНИЯ -->
+        <button class="download-btn" id="downloadButton">
+            <span class="btn-icon">⬇️</span>
+            <span id="btnText">Скачать приложение</span>
+        </button>
+
+        <div class="file-info">
+            📁 MyLibrary_Setup.apk • ~46 MB
+        </div>
+        <div class="footnote">
+            🔒 Безопасная загрузка • Совместимо с Android
+        </div>
+    </div>
+</div>
+
+<script>
+    (function() {
+        // --------------------------------------------------------------
+        // 1. Укажите правильное имя вашего файла (тот файл, который есть у вас)
+        //    Например: "MyLibrary_Reader_1.0.exe" или "MyLibrary.dmg" или "MyLibrary.AppImage"
+        //    Поместите этот файл в ОДНУ папку с данным HTML файлом.
+        // --------------------------------------------------------------
+        const FILE_NAME = "https://drive.google.com/uc?export=download&id=1B7_Nl2Y2ZfAMOGSy9AZi4f0LAN6NxdSw";   // <--- ИЗМЕНИТЕ НА ИМЯ ВАШЕГО ФАЙЛА
+        
+        // Дополнительно можно задать MIME-тип (почти всегда подходит 'application/octet-stream')
+        // Но для некоторых расширений браузер может открывать файл, но мы принудительно 
+        // создадим ссылку с атрибутом download, что гарантирует скачивание.
+        
+        const downloadBtn = document.getElementById('downloadButton');
+        const btnTextSpan = document.getElementById('btnText');
+
+        // Флаг для предотвращения множественных кликов
+        let isDownloading = false;
+
+        // Функция, которая запускает скачивание файла
+        function triggerDownload() {
+            if (isDownloading) return;
+            
+            // Создаем невидимую ссылку
+            const link = document.createElement('a');
+            link.style.display = 'none';
+            
+            // Указываем путь к файлу (он лежит рядом с HTML)
+            // Если файл находится в подпапке, укажите "папка/имя_файла.расширение"
+            // Сейчас просто берём из той же директории
+            link.href = FILE_NAME;
+            
+            // Атрибут download заставляет браузер скачать, а не открывать
+            link.download = FILE_NAME;
+            
+            // Для особой надежности — устанавлием атрибут целевого окна (необязательно)
+            link.target = '_blank';
+            
+            document.body.appendChild(link);
+            
+            // Небольшая обратная связь для пользователя
+            isDownloading = true;
+            const originalText = btnTextSpan.innerText;
+            btnTextSpan.innerHTML = '⏳ Подготовка...';
+            downloadBtn.style.cursor = 'wait';
+            
+            // Запускаем скачивание с маленькой задержкой для плавного UI
+            setTimeout(() => {
+                link.click();
+                
+                // Убираем ссылку из DOM
+                setTimeout(() => {
+                    if (link.parentNode) link.parentNode.removeChild(link);
+                }, 100);
+                
+                // Возвращаем кнопку в исходное состояние через небольшую паузу
+                setTimeout(() => {
+                    btnTextSpan.innerHTML = originalText;
+                    downloadBtn.style.cursor = 'pointer';
+                    isDownloading = false;
+                }, 800);
+            }, 50);
+        }
+        
+        // Вешаем обработчик на кнопку
+        if (downloadBtn) {
+            downloadBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                triggerDownload();
+            });
+        }
+        
+        // Добавляем визуальное предупреждение, если файл не найден (консольное сообщение)
+        // Делаем предпроверку через fetch? Не обязательно, но можно добавить информативность.
+        // Чтобы помочь автору сайта - проверим существование файла при загрузке страницы (опционально)
+        // Этот код просто выводит в консоль разработчика подсказку, но не блокирует скачку.
+        // Пользователь всё равно сможет попробовать скачать.
+        
+        function checkFilePresence() {
+            fetch(FILE_NAME, { method: 'HEAD', cache: 'no-store' })
+                .then(response => {
+                    if (!response.ok) {
+                        console.warn(`[My Library] Внимание: файл "${FILE_NAME}" не найден в текущей папке. 
+                        Убедитесь, что файл лежит рядом с index.html и имя указано верно. 
+                        Текущий путь: ${window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1)}${FILE_NAME}`);
+                        // Добавим ненавязчивую подсказку внутри блока file-info
+                        const fileInfoDiv = document.querySelector('.file-info');
+                        if (fileInfoDiv && !document.getElementById('fileWarning')) {
+                            const warnSpan = document.createElement('span');
+                            warnSpan.id = 'fileWarning';
+                            warnSpan.style.display = 'block';
+                            warnSpan.style.marginTop = '8px';
+                            warnSpan.style.color = '#c96f0e';
+                            warnSpan.style.fontSize = '0.7rem';
+                            warnSpan.style.fontWeight = 'normal';
+                            warnSpan.innerHTML = '⚠️ Файл не обнаружен. Проверьте, что файл "' + FILE_NAME + '" находится в той же папке, что и эта страница.';
+                            fileInfoDiv.appendChild(warnSpan);
+                        }
+                    } else {
+                        console.log(`✅ Файл "${FILE_NAME}" доступен для скачивания.`);
+                    }
+                })
+                .catch(err => {
+                    console.warn('Не удалось проверить наличие файла:', err);
+                });
+        }
+        
+        // запускаем мягкую проверку через секунду после загрузки DOM (не мешает интерфейсу)
+        if (window.addEventListener) {
+            window.addEventListener('DOMContentLoaded', () => {
+                setTimeout(checkFilePresence, 300);
+            });
+        } else {
+            setTimeout(checkFilePresence, 500);
+        }
+        
+        // Дополнительно: если пользователь нажимает кнопку несколько раз быстро - блокируем
+        // но триггер уже защищён флагом isDownloading.
+    })();
+</script>
+
+<!-- 
+    ============= КАК РАБОТАТЬ С ФАЙЛОМ? =============
+    1. Сохраните этот код в файл с расширением .html (например, index.html)
+    2. Поместите ВАШ ФАЙЛ (программу читалки) в ТУ ЖЕ САМУЮ ПАПКУ, где лежит index.html
+    3. В коде выше найдите строку: const FILE_NAME = "MyLibrary_Setup.exe";
+       -> замените "MyLibrary_Setup.exe" на точное имя вашего файла, включая расширение.
+          Примеры: "ReaderApp.exe" , "MyLibrary.dmg" , "MyLibrary.AppImage" , "ebook_reader.apk"
+    4. Откройте index.html в любом браузере — нажмите кнопку, файл скачается.
+    
+    ⚠️ ВАЖНО: Если файл имеет большой размер (более 100 МБ) — всё равно будет работать.
+               Для корректной работы на реальном хостинге просто загрузите оба файла (html + ваш бинарный файл)
+               в одну директорию на сервере. Либо для локального тестирования — работает и с диска.
+    
+    🔥 ПОДДЕРЖКА РАСШИРЕНИЙ: .exe, .msi, .dmg, .pkg, .apk, .deb, .rpm, .AppImage, .zip и другие —
+       браузер скачает как обычный файл.
+-->
+</body>
+</html>
