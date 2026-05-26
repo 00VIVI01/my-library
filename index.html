@@ -160,7 +160,7 @@
             }
         }
 
-        /* стили для состояния загрузки (опционально) */
+        /* стили для состояния загрузки */
         .downloading {
             pointer-events: none;
             opacity: 0.7;
@@ -202,7 +202,7 @@
 <script>
     (function() {
 
-        const FILE_NAME = "https://drive.google.com/uc?export=download&id=1B7_Nl2Y2ZfAMOGSy9AZi4f0LAN6NxdSw";   // <--- ИЗМЕНИТЕ НА ИМЯ ВАШЕГО ФАЙЛА
+        const FILE_NAME = "https://drive.google.com/uc?export=download&id=1B7_Nl2Y2ZfAMOGSy9AZi4f0LAN6NxdSw";
 
         const downloadBtn = document.getElementById('downloadButton');
         const btnTextSpan = document.getElementById('btnText');
@@ -218,15 +218,13 @@
             const link = document.createElement('a');
             link.style.display = 'none';
             
-            // Указываем путь к файлу (он лежит рядом с HTML)
-            // Если файл находится в подпапке, укажите "папка/имя_файла.расширение"
-            // Сейчас просто берём из той же директории
+            // Указываем путь к файлу
             link.href = FILE_NAME;
             
             // Атрибут download заставляет браузер скачать, а не открывать
             link.download = FILE_NAME;
             
-            // Для особой надежности — устанавлием атрибут целевого окна (необязательно)
+            // Для надежности устанавлием атрибут целевого окна
             link.target = '_blank';
             
             document.body.appendChild(link);
@@ -300,9 +298,6 @@
         } else {
             setTimeout(checkFilePresence, 500);
         }
-        
-        // Дополнительно: если пользователь нажимает кнопку несколько раз быстро - блокируем
-        // но триггер уже защищён флагом isDownloading.
     })();
 </script>
 </body>
